@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import { FlatList } from 'react-native-gesture-handler';
+import { StyleSheet, View } from 'react-native';
+
+import InputItem from './components/InputItem';
+import Completed from './components/Completed';
+import Pending from './components/Pending';
 
 export default function App() {
   const [text, setText] = useState('');
@@ -36,68 +38,14 @@ export default function App() {
 
   return (
     <View style={styles.screen}>
-      {/* Input */}
-      <View style={styles.container}>
-        <TextInput
-          style={styles.txt}
-          placeholder="Things to do in life ..."
-          onChangeText={handleChangeText}
-          value={text}
-        />
-        <FontAwesome.Button style={styles.btn} name="plus" backgroundColor="#0000FF" onPress={handleAddPending} />
-        {/* Add
-        </FontAwesome.Button> */}
-      </View>
-
-      <Text style={styles.titles}>Pending</Text>
-      {/* Pending */}
-      <FlatList
-        style={styles.itemsContainer}
-        data={pending}
-        keyExtractor={item => item.id}
-        renderItem={data => {
-          return (
-            <View style={styles.item} key={data.item.id}>
-              <Text style={styles.txt}>{data.item.value}</Text>
-              <FontAwesome.Button
-                style={styles.btn}
-                name="check"
-                backgroundColor="#008000"
-                onPress={() => handleAddCompleted(data.item)}
-              />
-              <View style={styles.btnSpacer}></View>
-              <FontAwesome.Button
-                style={styles.btn}
-                name="trash"
-                backgroundColor="#FF0000"
-                onPress={() => handleRemovePending(data.item.id)}
-              />
-            </View>
-          );
-        }}
-      ></FlatList>
-
-      {/* Completed */}
-      <Text style={styles.titles}>Completed</Text>
-
-      <FlatList
-        style={styles.itemsContainer}
-        data={completed}
-        keyExtractor={item => item.id}
-        renderItem={data => {
-          return (
-            <View style={styles.item} key={data.item.id}>
-              <Text style={styles.txt}>{data.item.value}</Text>
-              <FontAwesome.Button
-                style={styles.btn}
-                name="trash"
-                backgroundColor="#FF0000"
-                onPress={() => handleRemoveCompleted(data.item.id)}
-              />
-            </View>
-          );
-        }}
-      ></FlatList>
+      <InputItem styles={styles} handleChangeText={handleChangeText} handleAddPending={handleAddPending} text={text} />
+      <Pending
+        styles={styles}
+        pending={pending}
+        handleAddCompleted={handleAddCompleted}
+        handleRemovePending={handleRemovePending}
+      />
+      <Completed styles={styles} completed={completed} handleRemoveCompleted={handleRemoveCompleted} />
     </View>
   );
 }
